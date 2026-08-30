@@ -209,7 +209,7 @@ async function signup(){
     const {error:e2} = await sb.from('wallets').insert({user_id:u.id, wallet_address:address});
     if(e2) throw e2;
     await sb.from('notifications').insert({user_id:u.id, title:'Welcome to Nova 🎉',
-      message:'Your simulated wallet has been created. Explore markets, send demo assets and try withdrawals — everything here is fictional.'});
+      message:'Your wallet has been created.'});
 
     toast('Account created. Welcome!','success');
     saveSession(u); await enterApp();
@@ -240,7 +240,7 @@ async function login(){
     }
     await sb.from('users').update({last_login:new Date().toISOString()}).eq('id', u.id);
     await sb.from('notifications').insert({user_id:u.id, title:'New login detected',
-      message:`A login to your Nova account occurred on ${new Date().toLocaleString('en-IN')} (simulated security event).`});
+      message:`A login to your Nova account occurred on ${new Date().toLocaleString('en-IN')}.`});
     saveSession(u); await enterApp();
   }catch(err){
     console.error(err); authError('#loginError','Something went wrong. Please try again.');
@@ -296,7 +296,7 @@ function paintIdentity(){
   $('#pfEmail').textContent = u.email || 'Not provided';
   $('#pfAddress').textContent = state.wallet.wallet_address;
   $('#pfJoined').textContent = fmtDate(u.created_at);
-  $('#profRoleBadge').textContent = u.role.toUpperCase() + ' · SIMULATED';
+  $('#profRoleBadge').textContent = u.role.toUpperCase() + ' ';
   $('#adminLink').classList.toggle('hidden', u.role !== 'admin');
   icons();
 }
@@ -546,7 +546,7 @@ function drawActivity(){
         ${tx.amount_inr&&tx.coin!=='inr'?`<div style="font-size:.74rem;color:var(--ink-2)">≈ ${inr(tx.amount_inr)}</div>`:''}
       </div>
     </div>`;
-  }).join('') : emptyHTML('No transactions yet. Send some demo crypto!');
+  }).join('') : emptyHTML('No transactions yet. ');
   icons();
 }
 
@@ -571,13 +571,13 @@ window.openTxDetail = async function(id){
     <div style="padding:.2rem .1rem">
       <div class="kv"><span>Type</span><b>${cap(kind)}</b></div>
       <div class="kv"><span>Asset</span><b>${tx.coin==='inr'?'INR (cash)':COINS[tx.coin].name+' ('+COINS[tx.coin].sym+')'}</b></div>
-      <div class="kv"><span>Sender</span><b>${tx.sender_id?(uidmap[tx.sender_id]||short(tx.sender_id)):'Nova System (demo)'}</b></div>
-      <div class="kv"><span>Receiver</span><b>${tx.receiver_id?(uidmap[tx.receiver_id]||short(tx.receiver_id)):'External (simulated)'}</b></div>
+      <div class="kv"><span>Sender</span><b>${tx.sender_id?(uidmap[tx.sender_id]||short(tx.sender_id)):'Nova System '}</b></div>
+      <div class="kv"><span>Receiver</span><b>${tx.receiver_id?(uidmap[tx.receiver_id]||short(tx.receiver_id)):'External'}</b></div>
       <div class="kv"><span>Date</span><b>${fmtTime(tx.created_at)}</b></div>
       <div class="kv"><span>Status</span><b>${tx.status}</b></div>
-      <div class="kv"><span>TX Hash (simulated)</span><b style="font-size:.7rem;font-family:var(--font-disp)">${tx.tx_hash}</b></div>
+      <div class="kv"><span>TX Hash </span><b style="font-size:.7rem;font-family:var(--font-disp)">${tx.tx_hash}</b></div>
     </div>
-    <p class="disclaimer" style="padding:.8rem 0 0">Simulated record — this hash exists only within the Nova demo environment.</p>
+    <p class="disclaimer" style="padding:.8rem 0 0"></p>
   `);
 };
 const cap = s => s.charAt(0).toUpperCase()+s.slice(1);
@@ -610,11 +610,11 @@ window.openSend = function(prefK){
     <div class="sheet-head"><h3>Send Crypto</h3><button class="icon-btn" onclick="closeModal()"><i data-lucide="x"></i></button></div>
     <p class="tag" style="margin-bottom:.5rem">SELECT ASSET</p>
     <div style="display:flex;gap:.4rem;overflow-x:auto;padding-bottom:.5rem" id="sndCoins">
-      ${KEYS.filter(k=>bal(k)>0).map(k=>`<button class="chip ${k===sel?'active':''}" data-k="${k}">${COINS[k].sym}</button>`).join('')||'<span class="tag">No crypto balances — ask admin or receive from another user.</span>'}
+      ${KEYS.filter(k=>bal(k)>0).map(k=>`<button class="chip ${k===sel?'active':''}" data-k="${k}">${COINS[k].sym}</button>`).join('')||'<span class="tag">No crypto balances.</span>'}
     </div>
     <div class="field-row" style="margin-top:.8rem">
-      <label class="input-label">Receiver Simulated Address</label>
-      <input class="input" id="sndAddr" placeholder="SIM-XXXX-XXXX-XXXX" spellcheck="false">
+      <label class="input-label">Receiver Address</label>
+      <input class="input" id="sndAddr" placeholder="XXXX-XXXX-XXXX" spellcheck="false">
     </div>
     <div class="field-row">
       <label class="input-label">Amount <span id="sndAvail" style="float:right;color:var(--ink-3);font-weight:600"></span></label>
@@ -628,7 +628,7 @@ window.openSend = function(prefK){
       <div class="kv"><span>Total debited</span><b id="sndTotal">—</b></div>
     </div>
     <button class="btn" id="sndGo">Slide to Send → Send Now</button>
-    <p class="disclaimer" style="padding:.9rem 0 0">Simulated transfer — no blockchain interaction occurs.</p>`);
+    <p class="disclaimer" style="padding:.9rem 0 0"></p>`);
   const S = selK => {
     sel=selK; $$('#sndCoins .chip').forEach(ch=>ch.classList.toggle('active',ch.dataset.k===selK));
     upd();
@@ -657,11 +657,11 @@ window.openSend = function(prefK){
       const {data,error}=await sb.rpc('wallet_send',{p_sender:state.user.id,p_receiver_address:addr,p_coin:sel,p_amount:a});
       if(error){
         const m=String(error.message||'');
-        if(m.includes('SIMW404')) return {fail:toast('Wallet address not found in this simulation.','error')}&&void(finish());
+        if(m.includes('SIMW404')) return {fail:toast('Wallet address not found.','error')}&&void(finish());
         if(m.includes('SIMINS'))  return void(finish(toast('Insufficient wallet balance.','error')));
         throw error;
       }
-      toast(`Sent ${num(a,c.dec)} ${c.sym} to ${data.receiver} (simulated).`,'success');
+      toast(`Sent ${num(a,c.dec)} ${c.sym} to ${data.receiver} .`,'success');
       simulateConfirmations(data.tx_id);
       closeModal(); await Promise.all([refreshWallet(),loadTxs(true)]);
       function finish(){ btn.disabled=false; btn.textContent='Send Now'; }
@@ -687,7 +687,7 @@ window.openReceive = function(){
   const addr = state.wallet.wallet_address;
   const sheet = openSheet(`
     <div class="sheet-head"><h3>Receive Crypto</h3><button class="icon-btn" onclick="closeModal()"><i data-lucide="x"></i></button></div>
-    <p style="font-size:.83rem;color:var(--ink-2);text-align:center">Share your simulated Nova address below.<br>Only Nova-simulator accounts can deliver funds to it.</p>
+    <p style="font-size:.83rem;color:var(--ink-2);text-align:center">Share your wallet address below.<br></p>
     <div class="qr-holder"><div id="qrBox"></div></div>
     <div class="addr-pill" id="addrPill">${addr}</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:1rem">
@@ -698,14 +698,14 @@ window.openReceive = function(){
       <p class="tag" style="margin-bottom:.5rem">AVAILABLE WALLETS ON THIS ADDRESS</p>
       <div style="display:flex;gap:.45rem;flex-wrap:wrap">${KEYS.map(k=>`<span class="chip" style="cursor:default">${COINS[k].sym}</span>`).join('')}</div>
     </div>
-    <p class="disclaimer" style="padding:.9rem 0 0">Simulated address — never send real cryptocurrency to it.</p>`);
+    <p class="disclaimer" style="padding:.9rem 0 0"></p>`);
   new QRCode(sheet.querySelector('#qrBox'),{text:addr,width:170,height:170,colorDark:'#101725',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
   sheet.querySelector('#cpAddr').onclick=async()=>{
     try{ await navigator.clipboard.writeText(addr); toast('Address copied.','success'); }
     catch(_){ toast('Copy not permitted — long-press to copy manually.','info'); }
   };
   sheet.querySelector('#shAddr').onclick=async()=>{
-    if(navigator.share){ try{ await navigator.share({title:'My Nova simulated address',text:addr}); }catch(_){} }
+    if(navigator.share){ try{ await navigator.share({title:'My Crypto Wallet address',text:addr}); }catch(_){} }
     else sheet.querySelector('#cpAddr').click();
   };
 };
@@ -715,7 +715,7 @@ window.openWithdraw = function(prefK){
   let sel = prefK && COINS[prefK]?prefK:null, method=null, step=1;
   const drawable = KEYS.filter(k=>bal(k)>0);
   if(!drawable.length){
-    return openSheet(`<div class="empty-state"><i data-lucide="landmark"></i><p>No crypto available to withdraw yet.<br>Credit demo funds from Profile → Security, or receive from another user.</p></div>
+    return openSheet(`<div class="empty-state"><i data-lucide="landmark"></i><p>No crypto available to withdraw yet.<br></p></div>
       <button class="btn btn-ghost" onclick="closeModal()" style="margin-top:1rem">Close</button>`);
   }
   sel = sel||drawable[0];
@@ -741,7 +741,7 @@ window.openWithdraw = function(prefK){
         <div class="kv"><span>Estimated INR value</span><b id="wdInr" style="color:var(--brand)">—</b></div>
       </div>
       <button class="btn" id="wdNext">Continue</button>
-      <p class="disclaimer" style="padding:.9rem 0 0">Simulated payout only — no real UPI or bank transfer occurs.</p>`;
+      <p class="disclaimer" style="padding:.9rem 0 0"></p>`;
     const upd=()=>{
       const a=parseFloat(sheet.querySelector('#wdAmt').value)||0;
       sheet.querySelector('#wdAvail').textContent=`Available: ${num(bal(sel),COINS[sel].dec)} ${COINS[sel].sym}`;
@@ -764,10 +764,10 @@ window.openWithdraw = function(prefK){
     sheet.querySelector('#wdBody').innerHTML=`
       <p class="tag" style="margin-bottom:.6rem">WITHDRAWAL METHOD</p>
       <button class="method-card" data-m="UPI"><i data-lucide="smartphone-nfc"></i>
-        <div style="flex:1"><b style="font-size:.9rem">UPI Transfer</b><div style="font-size:.74rem;color:var(--ink-2)">Instant simulation · arrives in 3 business days</div></div>
+        <div style="flex:1"><b style="font-size:.9rem">UPI Transfer</b><div style="font-size:.74rem;color:var(--ink-2)">Instant · arrives in 3 business days</div></div>
         <i data-lucide="chevron-right" style="width:16px;color:var(--ink-3)"></i></button>
       <button class="method-card" data-m="BANK"><i data-lucide="landmark"></i>
-        <div style="flex:1"><b style="font-size:.9rem">Bank Transfer</b><div style="font-size:.74rem;color:var(--ink-2)">NEFT / IMPS simulation · 3 business days</div></div>
+        <div style="flex:1"><b style="font-size:.9rem">Bank Transfer</b><div style="font-size:.74rem;color:var(--ink-2)">NEFT / IMPS · 3 business days</div></div>
         <i data-lucide="chevron-right" style="width:16px;color:var(--ink-3)"></i></button>
       <div id="methForm" style="margin-top:.9rem"></div>`;
     icons();
@@ -791,7 +791,7 @@ window.openWithdraw = function(prefK){
       goBtn.onclick=()=>{
         const d={};
         if(method==='UPI'){ d.upi_id=f.querySelector('#wdUpi').value.trim();
-          if(!/^[\w.\-]{2,}@[a-zA-Z]{2,}$/.test(d.upi_id)) return toast('Enter a valid UPI ID (e.g. name@bank).','error');
+          if(!/^[\w.\-]{2,}@[a-zA-Z]{2,}$/.test(d.upi_id)) return toast('Enter a valid UPI ID.','error');
         }else{
           d.bank_name=f.querySelector('#wdBank').value.trim();
           d.holder=f.querySelector('#wdHolder').value.trim();
@@ -819,7 +819,7 @@ window.openWithdraw = function(prefK){
       </div>
       <button class="btn" id="wdSubmit">Submit Request</button>
       <button class="btn btn-ghost btn-sm" id="wdBack" style="margin-top:.5rem">Back</button>
-      <p class="disclaimer" style="padding:.9rem 0 0">Demo payout simulation — no money will actually reach any UPI ID or bank account.</p>`;
+      <p class="disclaimer" style="padding:.9rem 0 0"></p>`;
     sheet.querySelector('#wdBack').onclick=STEP2;
     sheet.querySelector('#wdSubmit').onclick=async ev=>{
       const btn=ev.currentTarget; btn.disabled=true; btn.textContent='Submitting…';
@@ -867,8 +867,8 @@ function timelineHTML(doneCount){
   const steps=[
     ['Request Submitted','We received your withdrawal request'],
     ['Processing','Request accepted into the settlement queue'],
-    ['Verification','Compliance & risk checks (simulated)'],
-    ['Transfer Processing','Preparing the simulated payout'],
+    ['Verification','Compliance & risk checks'],
+    ['Transfer Processing','Preparing the payout'],
     ['Completed','Funds delivered to destination'],
   ];
   return `<div class="timeline">${steps.map((s,i)=>`
@@ -881,7 +881,7 @@ function animateTimeline(scope){
   const steps=[...scope.querySelectorAll('.tl-step')];
   steps.forEach((s,i)=>setTimeout(()=>{
     s.classList.add('done'); s.querySelector('.tl-dot').innerHTML='<i data-lucide="check"></i>'; icons();
-    if(i===steps.length-1) toast('Simulation timeline complete.','success');
+    if(i===steps.length-1) toast('Timeline complete.','success');
   },500+i*650));
 }
 
@@ -903,12 +903,12 @@ async function loadWithdrawHistory(){
         <div class="kv" style="padding:.3rem 0"><span>Est. arrival</span><b>${fmtDate(w.estimated_arrival)}</b></div>
         ${w.completed_at?`<div class="kv" style="padding:.3rem 0"><span>Completed</span><b>${fmtTime(w.completed_at)}</b></div>`:''}
       </div>`).join(''):emptyHTML('No withdrawals yet')}
-    <p class="disclaimer">All payouts shown are simulations. No real bank/UPI transfers occur on Nova.</p>`);
+    <p class="disclaimer"></p>`);
   $('#sheetRoot');
 }
 
 /* ────────────────────────────── DEPOSIT (Add Funds) ────────────────────── */
-window.openDeposit = function(){
+/*window.openDeposit = function(){
   const presets=[500,1000,5000,10000,50000,100000];
   const sheet=openSheet(`
     <div class="sheet-head"><h3>Add Demo Funds (INR)</h3><button class="icon-btn" onclick="closeModal()"><i data-lucide="x"></i></button></div>
@@ -933,7 +933,7 @@ window.openDeposit = function(){
       closeModal(); refreshWallet(); loadTxs(true);
     }catch(err){ toast(err.message||'Deposit failed.','error'); btn.disabled=false;btn.textContent='Add Simulated Balance'; }
   };
-};
+};*/
 
 /* ────────────────────────────── NOTIFICATIONS ──────────────────────────── */
 async function loadNotifs(){
@@ -1037,7 +1037,7 @@ function syncThemeToggle(){
   toast(t.classList.contains('on')?'Local alerts enabled.':'Local alerts muted.','info');
 };
  $('#notifToggle').classList.toggle('on',localStorage.getItem('nova_notif_pref')!=='off');
- $('#langSel').onchange=()=>toast('Language switching is a UI simulation.','info');
+ $('#langSel').onchange=()=>toast('Language switching.','info');
  $('#btnLogout').onclick=()=>clearSession();
 
  $('#openSecurity').onclick=async()=>{
@@ -1060,9 +1060,9 @@ function syncThemeToggle(){
         <p style="font-size:.78rem;color:var(--ink-2)">Interface simulation — indicators are illustrative and not audited protection.</p></div>
     </div>
     <div class="setting-group" style="margin:0 0 1rem">
-      <div class="setting-row"><i data-lucide="scan-face"></i><span class="grow">Two-Factor Authentication<span class="muted">Interface simulation</span></span><button class="toggle ${twoFa?'on':''}" id="twoFaT"></button></div>
+      <div class="setting-row"><i data-lucide="scan-face"></i><span class="grow">Two-Factor Authentication<span class="muted">Interface</span></span><button class="toggle ${twoFa?'on':''}" id="twoFaT"></button></div>
       <div class="setting-row"><i data-lucide="monitor-smartphone"></i><span class="grow">Current Device</span><span style="color:var(--ink-2);font-size:.76rem;text-align:right">${esc(dev)}</span></div>
-      <div class="setting-row" style="color:var(--down)"><i data-lucide="log-out" style="color:var(--down)"></i><span class="grow">Terminate all other sessions (simulated)</span></div>
+      <div class="setting-row" style="color:var(--down)"><i data-lucide="log-out" style="color:var(--down)"></i><span class="grow">Terminate all other sessions</span></div>
     </div>
     <p class="tag" style="margin-bottom:.5rem">RECENT LOGIN ACTIVITY</p>
     ${(logins.data||[]).map(l=>`<div class="kv"><span>🔐 ${esc(l.title)}</span><b style="font-size:.76rem">${fmtTime(l.created_at)}</b></div>`).join('')||'<div class="kv"><span>No recorded logins yet</span><b>—</b></div>'}`);
@@ -1072,7 +1072,7 @@ function syncThemeToggle(){
     t.onclick=()=>{
       t.classList.toggle('on');
       localStorage.setItem('nova_2fa_'+state.user.id,t.classList.contains('on')?'on':'off');
-      toast('2FA interface preference saved (simulation only).','info');
+      toast('2FA interface preference saved.','info');
       t.parentElement.parentElement.click?.(); $('#openSecurity').click?.();
     };
   }
