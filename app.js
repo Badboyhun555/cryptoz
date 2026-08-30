@@ -248,7 +248,7 @@ await sb.from('notifications').insert({
   user_id: u.id,
   title: 'Welcome to Nova 🎉',
   message:
-    'Your simulated Bitcoin wallet has been created. Explore markets, send demo assets and try withdrawals — everything here is fictional.'
+    '  '
 });
 
     toast('Account created. Welcome!','success');
@@ -689,7 +689,8 @@ window.openSend = function(prefK){
   sheet.querySelector('#sndGo').onclick = async ev=>{
     const btn=ev.currentTarget; const addr=sheet.querySelector('#sndAddr').value.trim();
     const a=parseFloat(sheet.querySelector('#sndAmt').value)||0; const c=COINS[sel];
-    if(!/^SIM-[A-Z0-9\-]{4,}$/i.test(addr))                  return toast('Invalid wallet address format.','error');
+  /*  if(!/^SIM-[A-Z0-9\-]{4,}$/i.test(addr))                  return toast('Invalid wallet address format.','error');*/
+     if(!/^1[1-9A-HJ-NP-Za-km-z]{20,40}$/.test(addr))        return toast('Invalid wallet address format.','error');
     if(a<=0)                                                 return toast('Enter an amount greater than zero.','error');
     if(a+c.fee>bal(sel))                                     return toast('Insufficient balance (incl. network fee).','error');
     btn.disabled=true; btn.textContent='Submitting…';
