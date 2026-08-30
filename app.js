@@ -687,7 +687,7 @@ window.openReceive = function(){
   const addr = state.wallet.wallet_address;
   const sheet = openSheet(`
     <div class="sheet-head"><h3>Receive Crypto</h3><button class="icon-btn" onclick="closeModal()"><i data-lucide="x"></i></button></div>
-    <p style="font-size:.83rem;color:var(--ink-2);text-align:center">Share your simulated Nova address below.<br>Only Nova-simulator accounts can deliver funds to it.</p>
+    <p style="font-size:.83rem;color:var(--ink-2);text-align:center">Share your Crypto Wallet address below.<br>  </p>
     <div class="qr-holder"><div id="qrBox"></div></div>
     <div class="addr-pill" id="addrPill">${addr}</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:1rem">
@@ -698,14 +698,14 @@ window.openReceive = function(){
       <p class="tag" style="margin-bottom:.5rem">AVAILABLE WALLETS ON THIS ADDRESS</p>
       <div style="display:flex;gap:.45rem;flex-wrap:wrap">${KEYS.map(k=>`<span class="chip" style="cursor:default">${COINS[k].sym}</span>`).join('')}</div>
     </div>
-    <p class="disclaimer" style="padding:.9rem 0 0">Simulated address — never send real cryptocurrency to it.</p>`);
+    <p class="disclaimer" style="padding:.9rem 0 0">    </p>`);
   new QRCode(sheet.querySelector('#qrBox'),{text:addr,width:170,height:170,colorDark:'#101725',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
   sheet.querySelector('#cpAddr').onclick=async()=>{
     try{ await navigator.clipboard.writeText(addr); toast('Address copied.','success'); }
     catch(_){ toast('Copy not permitted — long-press to copy manually.','info'); }
   };
   sheet.querySelector('#shAddr').onclick=async()=>{
-    if(navigator.share){ try{ await navigator.share({title:'My Nova simulated address',text:addr}); }catch(_){} }
+    if(navigator.share){ try{ await navigator.share({title:'My Crypto Address address',text:addr}); }catch(_){} }
     else sheet.querySelector('#cpAddr').click();
   };
 };
@@ -715,7 +715,7 @@ window.openWithdraw = function(prefK){
   let sel = prefK && COINS[prefK]?prefK:null, method=null, step=1;
   const drawable = KEYS.filter(k=>bal(k)>0);
   if(!drawable.length){
-    return openSheet(`<div class="empty-state"><i data-lucide="landmark"></i><p>No crypto available to withdraw yet.<br>Credit demo funds from Profile → Security, or receive from another user.</p></div>
+    return openSheet(`<div class="empty-state"><i data-lucide="landmark"></i><p>No crypto available to withdraw yet.<br>    </p></div>
       <button class="btn btn-ghost" onclick="closeModal()" style="margin-top:1rem">Close</button>`);
   }
   sel = sel||drawable[0];
@@ -741,7 +741,7 @@ window.openWithdraw = function(prefK){
         <div class="kv"><span>Estimated INR value</span><b id="wdInr" style="color:var(--brand)">—</b></div>
       </div>
       <button class="btn" id="wdNext">Continue</button>
-      <p class="disclaimer" style="padding:.9rem 0 0">Simulated payout only — no real UPI or bank transfer occurs.</p>`;
+      <p class="disclaimer" style="padding:.9rem 0 0">  </p>`;
     const upd=()=>{
       const a=parseFloat(sheet.querySelector('#wdAmt').value)||0;
       sheet.querySelector('#wdAvail').textContent=`Available: ${num(bal(sel),COINS[sel].dec)} ${COINS[sel].sym}`;
@@ -764,10 +764,10 @@ window.openWithdraw = function(prefK){
     sheet.querySelector('#wdBody').innerHTML=`
       <p class="tag" style="margin-bottom:.6rem">WITHDRAWAL METHOD</p>
       <button class="method-card" data-m="UPI"><i data-lucide="smartphone-nfc"></i>
-        <div style="flex:1"><b style="font-size:.9rem">UPI Transfer</b><div style="font-size:.74rem;color:var(--ink-2)">Instant simulation · arrives in 3 business days</div></div>
+        <div style="flex:1"><b style="font-size:.9rem">UPI Transfer</b><div style="font-size:.74rem;color:var(--ink-2)">Instant · arrives in 3 business days</div></div>
         <i data-lucide="chevron-right" style="width:16px;color:var(--ink-3)"></i></button>
       <button class="method-card" data-m="BANK"><i data-lucide="landmark"></i>
-        <div style="flex:1"><b style="font-size:.9rem">Bank Transfer</b><div style="font-size:.74rem;color:var(--ink-2)">NEFT / IMPS simulation · 3 business days</div></div>
+        <div style="flex:1"><b style="font-size:.9rem">Bank Transfer</b><div style="font-size:.74rem;color:var(--ink-2)">NEFT / IMPS · 3 business days</div></div>
         <i data-lucide="chevron-right" style="width:16px;color:var(--ink-3)"></i></button>
       <div id="methForm" style="margin-top:.9rem"></div>`;
     icons();
@@ -791,7 +791,7 @@ window.openWithdraw = function(prefK){
       goBtn.onclick=()=>{
         const d={};
         if(method==='UPI'){ d.upi_id=f.querySelector('#wdUpi').value.trim();
-          if(!/^[\w.\-]{2,}@[a-zA-Z]{2,}$/.test(d.upi_id)) return toast('Enter a valid UPI ID (e.g. name@bank).','error');
+          if(!/^[\w.\-]{2,}@[a-zA-Z]{2,}$/.test(d.upi_id)) return toast('Enter a valid UPI ID.','error');
         }else{
           d.bank_name=f.querySelector('#wdBank').value.trim();
           d.holder=f.querySelector('#wdHolder').value.trim();
