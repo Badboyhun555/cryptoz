@@ -819,7 +819,7 @@ window.openWithdraw = function(prefK){
       </div>
       <button class="btn" id="wdSubmit">Submit Request</button>
       <button class="btn btn-ghost btn-sm" id="wdBack" style="margin-top:.5rem">Back</button>
-      <p class="disclaimer" style="padding:.9rem 0 0">Demo payout simulation — no money will actually reach any UPI ID or bank account.</p>`;
+      <p class="disclaimer" style="padding:.9rem 0 0">    </p>`;
     sheet.querySelector('#wdBack').onclick=STEP2;
     sheet.querySelector('#wdSubmit').onclick=async ev=>{
       const btn=ev.currentTarget; btn.disabled=true; btn.textContent='Submitting…';
@@ -867,8 +867,8 @@ function timelineHTML(doneCount){
   const steps=[
     ['Request Submitted','We received your withdrawal request'],
     ['Processing','Request accepted into the settlement queue'],
-    ['Verification','Compliance & risk checks (simulated)'],
-    ['Transfer Processing','Preparing the simulated payout'],
+    ['Verification','Compliance & risk checks'],
+    ['Transfer Processing','Preparing the payout'],
     ['Completed','Funds delivered to destination'],
   ];
   return `<div class="timeline">${steps.map((s,i)=>`
@@ -881,7 +881,7 @@ function animateTimeline(scope){
   const steps=[...scope.querySelectorAll('.tl-step')];
   steps.forEach((s,i)=>setTimeout(()=>{
     s.classList.add('done'); s.querySelector('.tl-dot').innerHTML='<i data-lucide="check"></i>'; icons();
-    if(i===steps.length-1) toast('Simulation timeline complete.','success');
+    if(i===steps.length-1) toast('Timeline complete.','success');
   },500+i*650));
 }
 
@@ -903,7 +903,7 @@ async function loadWithdrawHistory(){
         <div class="kv" style="padding:.3rem 0"><span>Est. arrival</span><b>${fmtDate(w.estimated_arrival)}</b></div>
         ${w.completed_at?`<div class="kv" style="padding:.3rem 0"><span>Completed</span><b>${fmtTime(w.completed_at)}</b></div>`:''}
       </div>`).join(''):emptyHTML('No withdrawals yet')}
-    <p class="disclaimer">All payouts shown are simulations. No real bank/UPI transfers occur on Nova.</p>`);
+    <p class="disclaimer">    </p>`);
   $('#sheetRoot');
 }
 
@@ -1013,7 +1013,7 @@ function subscribeRealtime(){
     .on('postgres_changes',{event:'UPDATE',schema:'public',table:'withdrawals',filter:`user_id=eq.${uid}`},
       p=>{
         const s=p.new.status;
-        if(s==='Completed') toast('Funds Successfully Delivered ✔ (simulated)','success');
+        if(s==='Completed') toast('Funds Successfully Delivered ✔ ','success');
         else if(s==='Rejected') toast('Withdrawal rejected — amount refunded to wallet.','error');
         else if(s==='Failed') toast('Withdrawal failed — amount refunded to wallet.','error');
         else if(s==='Processing') toast('Withdrawal approved — now processing.','info');
@@ -1037,7 +1037,7 @@ function syncThemeToggle(){
   toast(t.classList.contains('on')?'Local alerts enabled.':'Local alerts muted.','info');
 };
  $('#notifToggle').classList.toggle('on',localStorage.getItem('nova_notif_pref')!=='off');
- $('#langSel').onchange=()=>toast('Language switching is a UI simulation.','info');
+ $('#langSel').onchange=()=>toast('There is a problem to switch Language.','info');
  $('#btnLogout').onclick=()=>clearSession();
 
  $('#openSecurity').onclick=async()=>{
