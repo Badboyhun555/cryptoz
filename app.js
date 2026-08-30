@@ -664,10 +664,10 @@ window.openSend = function(prefK){
     </div>
     <div class="field-row"><label class="input-label">Note (optional)</label><input class="input" id="sndNote" placeholder="What's this for?" maxlength="80"></div>
     <div style="background:var(--surface-2);border-radius:14px;padding:.8rem 1rem;margin-bottom:1rem">
-      <div class="kv"><span>Estimated network fee</span><b id="sndFee">—</b></div>
+      <div class="kv"><span>Estimated network fee   </span><b id="sndFee">—</b></div>
       <div class="kv"><span>Total debited</span><b id="sndTotal">—</b></div>
     </div>
-    <button class="btn" id="sndGo">Slide to Send → Send Now</button>
+    <button class="btn" id="sndGo">Send Now</button>
     <p class="disclaimer" style="padding:.9rem 0 0">     </p>`);
   const S = selK => {
     sel=selK; $$('#sndCoins .chip').forEach(ch=>ch.classList.toggle('active',ch.dataset.k===selK));
