@@ -746,7 +746,7 @@ window.openReceive = function(){
     catch(_){ toast('Copy not permitted — long-press to copy manually.','info'); }
   };
   sheet.querySelector('#shAddr').onclick=async()=>{
-    if(navigator.share){ try{ await navigator.share({title:'My Crypto Address address',text:addr}); }catch(_){} }
+    if(navigator.share){ try{ await navigator.share({title:'My Crypto Address',text:addr}); }catch(_){} }
     else sheet.querySelector('#cpAddr').click();
   };
 };
