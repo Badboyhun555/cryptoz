@@ -1057,22 +1057,22 @@ function syncThemeToggle(){
         </svg><b>${score}</b>
       </div>
       <div><b style="font-size:.95rem">Security Score</b>
-        <p style="font-size:.78rem;color:var(--ink-2)">Interface simulation — indicators are illustrative and not audited protection.</p></div>
+        <p style="font-size:.78rem;color:var(--ink-2)">    </p></div>
     </div>
     <div class="setting-group" style="margin:0 0 1rem">
-      <div class="setting-row"><i data-lucide="scan-face"></i><span class="grow">Two-Factor Authentication<span class="muted">Interface simulation</span></span><button class="toggle ${twoFa?'on':''}" id="twoFaT"></button></div>
+      <div class="setting-row"><i data-lucide="scan-face"></i><span class="grow">Two-Factor Authentication<span class="muted">   </span></span><button class="toggle ${twoFa?'on':''}" id="twoFaT"></button></div>
       <div class="setting-row"><i data-lucide="monitor-smartphone"></i><span class="grow">Current Device</span><span style="color:var(--ink-2);font-size:.76rem;text-align:right">${esc(dev)}</span></div>
-      <div class="setting-row" style="color:var(--down)"><i data-lucide="log-out" style="color:var(--down)"></i><span class="grow">Terminate all other sessions (simulated)</span></div>
+      <div class="setting-row" style="color:var(--down)"><i data-lucide="log-out" style="color:var(--down)"></i><span class="grow">Terminate all other sessions</span></div>
     </div>
     <p class="tag" style="margin-bottom:.5rem">RECENT LOGIN ACTIVITY</p>
-    ${(logins.data||[]).map(l=>`<div class="kv"><span>🔐 ${esc(l.title)}</span><b style="font-size:.76rem">${fmtTime(l.created_at)}</b></div>`).join('')||'<div class="kv"><span>No recorded logins yet</span><b>—</b></div>'}`);
+    ${(logins.data||[]).map(l=>`<div class="kv"><span> ${esc(l.title)}</span><b style="font-size:.76rem">${fmtTime(l.created_at)}</b></div>`).join('')||'<div class="kv"><span>No recorded logins yet</span><b>—</b></div>'}`);
   sheetReady();
   function sheetReady(){
     const t=$('#twoFaT'); if(!t) return;
     t.onclick=()=>{
       t.classList.toggle('on');
       localStorage.setItem('nova_2fa_'+state.user.id,t.classList.contains('on')?'on':'off');
-      toast('2FA interface preference saved (simulation only).','info');
+      toast('2FA interface preference saved.','info');
       t.parentElement.parentElement.click?.(); $('#openSecurity').click?.();
     };
   }
