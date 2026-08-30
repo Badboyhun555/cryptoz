@@ -546,7 +546,7 @@ function drawActivity(){
         ${tx.amount_inr&&tx.coin!=='inr'?`<div style="font-size:.74rem;color:var(--ink-2)">≈ ${inr(tx.amount_inr)}</div>`:''}
       </div>
     </div>`;
-  }).join('') : emptyHTML('No transactions yet. Send some demo crypto!');
+  }).join('') : emptyHTML('No transactions yet.');
   icons();
 }
 
@@ -571,13 +571,13 @@ window.openTxDetail = async function(id){
     <div style="padding:.2rem .1rem">
       <div class="kv"><span>Type</span><b>${cap(kind)}</b></div>
       <div class="kv"><span>Asset</span><b>${tx.coin==='inr'?'INR (cash)':COINS[tx.coin].name+' ('+COINS[tx.coin].sym+')'}</b></div>
-      <div class="kv"><span>Sender</span><b>${tx.sender_id?(uidmap[tx.sender_id]||short(tx.sender_id)):'Nova System (demo)'}</b></div>
-      <div class="kv"><span>Receiver</span><b>${tx.receiver_id?(uidmap[tx.receiver_id]||short(tx.receiver_id)):'External (simulated)'}</b></div>
+      <div class="kv"><span>Sender</span><b>${tx.sender_id?(uidmap[tx.sender_id]||short(tx.sender_id)):'Nova System'}</b></div>
+      <div class="kv"><span>Receiver</span><b>${tx.receiver_id?(uidmap[tx.receiver_id]||short(tx.receiver_id)):'External'}</b></div>
       <div class="kv"><span>Date</span><b>${fmtTime(tx.created_at)}</b></div>
       <div class="kv"><span>Status</span><b>${tx.status}</b></div>
-      <div class="kv"><span>TX Hash (simulated)</span><b style="font-size:.7rem;font-family:var(--font-disp)">${tx.tx_hash}</b></div>
+      <div class="kv"><span>TX Hash</span><b style="font-size:.7rem;font-family:var(--font-disp)">${tx.tx_hash}</b></div>
     </div>
-    <p class="disclaimer" style="padding:.8rem 0 0">Simulated record — this hash exists only within the Nova demo environment.</p>
+    <p class="disclaimer" style="padding:.8rem 0 0">    </p>
   `);
 };
 const cap = s => s.charAt(0).toUpperCase()+s.slice(1);
