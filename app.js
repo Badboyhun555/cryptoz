@@ -908,7 +908,7 @@ async function loadWithdrawHistory(){
 }
 
 /* ────────────────────────────── DEPOSIT (Add Funds) ────────────────────── */
-/*window.openDeposit = function(){
+window.openDeposit = function(){
   const presets=[500,1000,5000,10000,50000,100000];
   const sheet=openSheet(`
     <div class="sheet-head"><h3>Add Demo Funds (INR)</h3><button class="icon-btn" onclick="closeModal()"><i data-lucide="x"></i></button></div>
@@ -933,8 +933,7 @@ async function loadWithdrawHistory(){
       closeModal(); refreshWallet(); loadTxs(true);
     }catch(err){ toast(err.message||'Deposit failed.','error'); btn.disabled=false;btn.textContent='Add Simulated Balance'; }
   };
-};*/
-
+};
 /* ────────────────────────────── NOTIFICATIONS ──────────────────────────── */
 async function loadNotifs(){
   const {data}=await sb.from('notifications').select('*').eq('user_id',state.user.id).order('created_at',{ascending:false}).limit(60);
