@@ -610,11 +610,11 @@ window.openSend = function(prefK){
     <div class="sheet-head"><h3>Send Crypto</h3><button class="icon-btn" onclick="closeModal()"><i data-lucide="x"></i></button></div>
     <p class="tag" style="margin-bottom:.5rem">SELECT ASSET</p>
     <div style="display:flex;gap:.4rem;overflow-x:auto;padding-bottom:.5rem" id="sndCoins">
-      ${KEYS.filter(k=>bal(k)>0).map(k=>`<button class="chip ${k===sel?'active':''}" data-k="${k}">${COINS[k].sym}</button>`).join('')||'<span class="tag">No crypto balances — ask admin or receive from another user.</span>'}
+      ${KEYS.filter(k=>bal(k)>0).map(k=>`<button class="chip ${k===sel?'active':''}" data-k="${k}">${COINS[k].sym}</button>`).join('')||'<span class="tag">No crypto balances.</span>'}
     </div>
     <div class="field-row" style="margin-top:.8rem">
-      <label class="input-label">Receiver Simulated Address</label>
-      <input class="input" id="sndAddr" placeholder="SIM-XXXX-XXXX-XXXX" spellcheck="false">
+      <label class="input-label">Receiver Address</label>
+      <input class="input" id="sndAddr" placeholder="XXXX-XXXX-XXXX" spellcheck="false">
     </div>
     <div class="field-row">
       <label class="input-label">Amount <span id="sndAvail" style="float:right;color:var(--ink-3);font-weight:600"></span></label>
@@ -628,7 +628,7 @@ window.openSend = function(prefK){
       <div class="kv"><span>Total debited</span><b id="sndTotal">—</b></div>
     </div>
     <button class="btn" id="sndGo">Slide to Send → Send Now</button>
-    <p class="disclaimer" style="padding:.9rem 0 0">Simulated transfer — no blockchain interaction occurs.</p>`);
+    <p class="disclaimer" style="padding:.9rem 0 0">     </p>`);
   const S = selK => {
     sel=selK; $$('#sndCoins .chip').forEach(ch=>ch.classList.toggle('active',ch.dataset.k===selK));
     upd();
@@ -657,11 +657,11 @@ window.openSend = function(prefK){
       const {data,error}=await sb.rpc('wallet_send',{p_sender:state.user.id,p_receiver_address:addr,p_coin:sel,p_amount:a});
       if(error){
         const m=String(error.message||'');
-        if(m.includes('SIMW404')) return {fail:toast('Wallet address not found in this simulation.','error')}&&void(finish());
+        if(m.includes('SIMW404')) return {fail:toast('Wallet address not found.','error')}&&void(finish());
         if(m.includes('SIMINS'))  return void(finish(toast('Insufficient wallet balance.','error')));
         throw error;
       }
-      toast(`Sent ${num(a,c.dec)} ${c.sym} to ${data.receiver} (simulated).`,'success');
+      toast(`Sent ${num(a,c.dec)} ${c.sym} to ${data.receiver} .`,'success');
       simulateConfirmations(data.tx_id);
       closeModal(); await Promise.all([refreshWallet(),loadTxs(true)]);
       function finish(){ btn.disabled=false; btn.textContent='Send Now'; }
