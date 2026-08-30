@@ -202,14 +202,54 @@ async function signup(){
     if(e1) throw e1;
 
     /* unique simulated wallet address */
-    let address, tries = 0;
+ /*   let address, tries = 0;
     do{ address = 'SIM-' + randHex(4).toUpperCase().match(/.{1,4}/g).join('-'); }
     while((await sb.from('wallets').select('id').eq('wallet_address',address)).data?.length && ++tries < 5);
 
     const {error:e2} = await sb.from('wallets').insert({user_id:u.id, wallet_address:address});
     if(e2) throw e2;
     await sb.from('notifications').insert({user_id:u.id, title:'Welcome to Nova 🎉',
-      message:' '});
+      message:' '});*/
+     /* unique simulated Bitcoin wallet address */
+let address, tries = 0;
+
+do {
+  const chars = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+
+  let randomPart = '';
+  for (let i = 0; i < 32; i++) {
+    randomPart += chars[Math.floor(Math.random() * chars.length)];
+  }
+
+  // Bitcoin-style demo address
+  address = '1' + randomPart;
+
+  const { data } = await sb
+    .from('wallets')
+    .select('id')
+    .eq('wallet_address', address)
+    .limit(1);
+
+  if (!data?.length) break;
+
+  tries++;
+} while (tries < 5);
+
+const { error: e2 } = await sb
+  .from('wallets')
+  .insert({
+    user_id: u.id,
+    wallet_address: address
+  });
+
+if (e2) throw e2;
+
+await sb.from('notifications').insert({
+  user_id: u.id,
+  title: 'Welcome to Nova 🎉',
+  message:
+    'Your simulated Bitcoin wallet has been created. Explore markets, send demo assets and try withdrawals — everything here is fictional.'
+});
 
     toast('Account created. Welcome!','success');
     saveSession(u); await enterApp();
