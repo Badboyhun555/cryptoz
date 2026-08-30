@@ -676,7 +676,7 @@ window.openSend = function(prefK){
   function upd(){
     const b=bal(sel),c=COINS[sel];
     $('#sndAvail').textContent=`Available: ${num(b,c.dec)} ${c.sym}`;
-    $('#sndFee').textContent=num(c.fee,c.dec)+' '+c.sym+' (demo)';
+    $('#sndFee').textContent=num(c.fee,c.dec)+' '+c.sym+' ';
     const a=parseFloat($('#sndAmt').value)||0;
     $('#sndVal').textContent=inr(a*price(c.sym));
     $('#sndTotal').textContent=num(a+c.fee,c.dec)+' '+c.sym;
