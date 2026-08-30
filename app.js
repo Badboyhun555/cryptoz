@@ -163,7 +163,7 @@ function authErrorClear(){ $$('.form-error').forEach(e=>e.classList.remove('show
  $('#btnForgot').onclick = ()=>{
   openSheet(`
     <div class="sheet-head"><h3>Reset Password</h3><button class="icon-btn" onclick="closeModal()"><i data-lucide="x"></i></button></div>
-    <p style="font-size:.85rem;color:var(--ink-2);margin-bottom:1rem">This simulator does not send real emails. For recovery testing, ask the platform administrator to reset your password in the admin console.</p>
+    <p style="font-size:.85rem;color:var(--ink-2);margin-bottom:1rem">For recovery testing, ask the platform administrator to reset your password in the admin console.</p>
     <button class="btn btn-ghost" onclick="closeModal()">Understood</button>`);
 };
 
@@ -209,7 +209,7 @@ async function signup(){
     const {error:e2} = await sb.from('wallets').insert({user_id:u.id, wallet_address:address});
     if(e2) throw e2;
     await sb.from('notifications').insert({user_id:u.id, title:'Welcome to Nova 🎉',
-      message:'Your simulated wallet has been created. Explore markets, send demo assets and try withdrawals — everything here is fictional.'});
+      message:' '});
 
     toast('Account created. Welcome!','success');
     saveSession(u); await enterApp();
@@ -240,7 +240,7 @@ async function login(){
     }
     await sb.from('users').update({last_login:new Date().toISOString()}).eq('id', u.id);
     await sb.from('notifications').insert({user_id:u.id, title:'New login detected',
-      message:`A login to your Nova account occurred on ${new Date().toLocaleString('en-IN')} (simulated security event).`});
+      message:`A login to your Nova account occurred on ${new Date().toLocaleString('en-IN')} .`});
     saveSession(u); await enterApp();
   }catch(err){
     console.error(err); authError('#loginError','Something went wrong. Please try again.');
@@ -296,7 +296,7 @@ function paintIdentity(){
   $('#pfEmail').textContent = u.email || 'Not provided';
   $('#pfAddress').textContent = state.wallet.wallet_address;
   $('#pfJoined').textContent = fmtDate(u.created_at);
-  $('#profRoleBadge').textContent = u.role.toUpperCase() + ' · SIMULATED';
+  $('#profRoleBadge').textContent = u.role.toUpperCase() + '  ';
   $('#adminLink').classList.toggle('hidden', u.role !== 'admin');
   icons();
 }
